@@ -1,0 +1,28 @@
+services:
+  - type: web
+    name: saas-api
+    env: node
+    plan: free
+    rootDir: saas/server
+    buildCommand: npm install
+    startCommand: npm start
+    autoDeploy: true
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: CORS_ORIGIN
+        value: https://YOUR_CLIENT_URL
+      - key: DATABASE_URL
+        value: YOUR_DATABASE_URL
+      - key: CLERK_SECRET_KEY
+        value: YOUR_CLERK_SECRET_KEY
+      - key: GEMINI_API_KEY
+        value: YOUR_GEMINI_API_KEY
+      - key: CLIPDROP_API_KEY
+        value: YOUR_CLIPDROP_API_KEY
+      - key: CLOUDINARY_CLOUD_NAME
+        value: YOUR_CLOUDINARY_CLOUD_NAME
+      - key: CLOUDINARY_API_KEY
+        value: YOUR_CLOUDINARY_API_KEY
+      - key: CLOUDINARY_API_SECRET
+        value: YOUR_CLOUDINARY_API_SECRET

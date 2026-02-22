@@ -8,20 +8,26 @@ export const auth = async (req, res, next) => {
 
         const user = await clerkClient.users.getUser(userId)
 
-        if (!hasPremiumPlan && user.privateMetadata.free_usage) {
-            req.free_usage = user.privateMetadata.free_usage
+        if (!hasPremiumPlan) {
+            if (user.privateMetadata?.free_usage !== undefined) {
+                req.free_usage = user.privateMetadata.free_usage
+            } else {
+                await clerkClient.users.updateUserMetadata(userId, {
+                    privateMetadata: {
+                        ...user.privateMetadata,
+                        free_usage: 0
+                    }
+                })
+                req.free_usage = 0;
+            }
         } else {
-            await clerkClient.users.updateUserMetadata(userId, {
-                privateMetadata: {
-                    free_usage: 0
-                }
-            })
             req.free_usage = 0;
         }
         req.plan = hasPremiumPlan ? 'premium' : 'free';
         next()
     } catch (error) {
-        res.json({
+        console.error('Auth middleware error:', error);
+        res.status(500).json({
             success: false,
             message: error.message
         })
